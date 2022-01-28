@@ -13,103 +13,81 @@
 #include <thread>
 #include <future>
 
+#include <stdarg.h>
+#include <variant>
+
 #include "connect.cpp"
 #include "address.h"
 #include "db/postgres.h"
 #include "connectedIp/runConnected.h"
 
+#include "db/require/requireDb.h"
+
+struct foo
+{
+    int i{0};
+    std::string str{"h"};
+};
+
+
+template<class T>
+struct tmp
+{
+    T nm;
+};
 
 
 
-// struct data
-// {
-//    bool isRes;
-//    std::string addresStr;
-//    int port;
-//    double tymeRun;
-// };
+struct expand_type {
+  template<typename... T>
+  expand_type(T&&...) {}
+};
+
+template<typename... ArgTypes>
+void print(ArgTypes... args)
+{ 
+  expand_type{ 0, (std::cout << args, 0)... };
+}
 
 
-// data run(std::string addressStr, int port){
-//      address add;
-//     auto str = add.getAddress();
-//     connectSocet cs;
-//     data d;
-//     d.addresStr = addressStr;
-//     d.port = port;
+struct person
+{
+    
+    std::string addr;
+};
 
-//     using std::chrono::high_resolution_clock;
-//     using std::chrono::duration_cast;
-//     using std::chrono::duration;
-//     using std::chrono::milliseconds;
 
-//     auto t1 = high_resolution_clock::now();
 
-//     bool isRes = cs.init(addressStr, port);
-//     //std::cout << isRes << '\n';
-//     d.isRes = isRes;
 
-//     auto t2 = high_resolution_clock::now();
-
-//     /* Getting number of milliseconds as an integer. */
-//     auto ms_int = duration_cast<milliseconds>(t2 - t1);
-
-//     /* Getting number of milliseconds as a double. */
-//     duration<double, std::milli> ms_double = t2 - t1;
-
-//     // std::cout << ms_int.count() << "ms\n";
-//     // std::cout << ms_double.count() << "ms\n";
-//      d.tymeRun = ms_double.count();
-//     return d;
-// }
-
-// void start(int d1 = 0, int d2 = 0, int d3 = 0, int d4 = -1)
-// {
-//    std::thread th([d1, d2, d3, d4](){
-
-//         address add;
-//         add.setAddress(d1,d2,d3,d4);
-//         while (true)
-//         {
-//             auto addStr = add.getAddress();
-//             int port = 1;
-//             while (port <= 65535)
-//             {
-//                 std::future<data> ret = std::async(&run, addStr, port);
-//                 data d = ret.get();
-//                 if(d.isRes)
-//                 std::cout << d.isRes << " port = " << d.port << '\n';
-//                 ++port;
-//             }
-
-//             std::cout << "end address " << addStr << '\n';
-//         }
-//     });
-//     th.detach();
-// }
 
 int main()
-{
-
-
-postgres db;
-
-auto key = db.GetKey("../key.txt");
-    bool isConnect = static_cast<bool>(db.init("tkhhpiuo", "abul.db.elephantsql.com", 
-    key, "tkhhpiuo"));   
-
-
-runConnected rc;
-rc.startAsync();
-rc.startAsync(63, 63, 63, 62);
-rc.startAsync(127, 127, 127, 126);
-rc.startAsync(190, 190, 190, 189);
+{   
+    requireDb rdb;
     
-     std::string h{""};
-    while (h != "h")
-    {
-        std::cin >> h;
-    }
+    std::vector<std::vector<vType>> vec;
+    rdb.getData<person>("select * from actionaddress;", vec);
+    //rdb.getData<person>("select * from parameter_end", vec);
+    
+    auto tm = 
+    std::get_if<double>(&vec[5][1].var);
+    if(tm != nullptr)
+    std::cout << *tm << '\n';
+   
+
+// rdb.endIp();
+// std::cout << rdb.endIp() << '\n';
+
+// runConnected rc;
+// rc.startAsync();
+// rc.startAsync(63, 63, 63, 62);
+// rc.startAsync(127, 127, 127, 126);
+// rc.startAsync(190, 190, 190, 189);
+    
+    //  std::string h{""};
+    // while (h != "h")
+    // {
+    //     std::cin >> h;
+    // }
     
 
     return 0;

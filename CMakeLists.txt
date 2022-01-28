@@ -16,6 +16,7 @@ add_executable(app
     main.cpp
     address.cpp
     db/postgres.cpp
+    db/require/requireDb.cpp
     connectedIp/runConnected.cpp
 )
 
