@@ -56,22 +56,50 @@ struct person
     std::string addr;
 };
 
+template<typename... ArgTypes>
+void set(expand_type& ex, ArgTypes... args){
+  expand_type _ex {0, (std::cout << args, 0)...};
+  ex = _ex;
+}
+
+template <typename T>
+void func(T t) 
+{
+    std::cout << "n " << __PRETTY_FUNCTION__ << " :" << t << std::endl ;
+}
+
+template<typename T, typename... Args>
+void func(T t, Args... args) // recursive variadic function
+{
+    std::cout << __PRETTY_FUNCTION__ << " :" << t <<std::endl ;
+
+    func(args...) ;
+}
 
 
-
+struct dt{
+    int num;
+    std::string str;
+};
 
 int main()
 {   
+
+    //dt d = {4, "hello"};
+
+    //std::cout << d.str << '\n';
+
+    // return 0;
     requireDb rdb;
-    
     std::vector<std::vector<vType>> vec;
     rdb.getData<person>("select * from actionaddress;", vec);
     //rdb.getData<person>("select * from parameter_end", vec);
     
-    auto tm = 
-    std::get_if<double>(&vec[5][1].var);
+     std::cout << vec[0].size() << '\n';
+
+    auto tm = std::get_if<double>(&vec[0][0].var);
     if(tm != nullptr)
-    std::cout << *tm << '\n';
+            std::cout << *tm << '\n';
    
 
 // rdb.endIp();
@@ -83,7 +111,7 @@ int main()
 // rc.startAsync(127, 127, 127, 126);
 // rc.startAsync(190, 190, 190, 189);
     
-    //  std::string h{""};
+    // std::string h{""};
     // while (h != "h")
     // {
     //     std::cin >> h;

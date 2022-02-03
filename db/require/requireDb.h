@@ -28,7 +28,7 @@ class requireDb{
     template<class T>
     void getData(std::string sql, std::vector<std::vector<vType>> &dataList){
         connectDb();
-
+       
         if(isConnect){
             auto res = db.require(sql);
             
@@ -68,7 +68,7 @@ class requireDb{
             }
         }
         else{
-            std::cout << 1024 << '\n';
+            std::cout << 1024 + 50 << '\n';
         }
     }
 };
