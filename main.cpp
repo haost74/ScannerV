@@ -22,6 +22,7 @@
 #include "connectedIp/runConnected.h"
 
 #include "db/require/requireDb.h"
+#include "utility/utility.h"
 
 struct foo
 {
@@ -84,6 +85,19 @@ struct dt{
 
 int main()
 {   
+
+    std::string s = "255.0.0.0";
+    std::string delimiter = ".";
+    std::vector<std::string> res;
+
+    utility ut;
+    ut.splitStr(s, delimiter, res);
+
+    for(auto el : res){
+        std::cout << std::stoi(el)/4  << '\n';
+    }
+
+return 0;
 
     requireDb rdb;
 
