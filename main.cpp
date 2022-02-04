@@ -85,22 +85,29 @@ struct dt{
 int main()
 {   
 
-    //dt d = {4, "hello"};
-
-    //std::cout << d.str << '\n';
-
-    // return 0;
     requireDb rdb;
+
+    /*
+        db.transag("delete from parameter_end; 
+        insert into parameter_end (""address"") values ('" + addr + "')");
+    */
+
+   rdb.require("delete from parameter_end;");
+   std::string addr = "0.0.0.0";
+   rdb.require("insert into parameter_end (""address"") values ('" + addr + "')");
+
     std::vector<std::vector<vType>> vec;
-    rdb.getData<person>("select * from actionaddress;", vec);
-    //rdb.getData<person>("select * from parameter_end", vec);
+    //rdb.getData<person>("select * from actionaddress;", vec);
+    rdb.getData<person>("select * from parameter_end", vec);
     
+    if(vec.size() > 0)
+    {
      std::cout << vec[0].size() << '\n';
 
-    auto tm = std::get_if<double>(&vec[0][0].var);
+    auto tm = std::get_if<std::string>(&vec[0][1].var);
     if(tm != nullptr)
             std::cout << *tm << '\n';
-   
+    }
 
 // rdb.endIp();
 // std::cout << rdb.endIp() << '\n';

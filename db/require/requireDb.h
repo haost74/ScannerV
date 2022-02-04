@@ -24,6 +24,8 @@ class requireDb{
     std::string endIp();
     requireDb();
     bool isConnect{false};
+    
+    void require(std::string sql);
 
     template<class T>
     void getData(std::string sql, std::vector<std::vector<vType>> &dataList){
@@ -31,40 +33,45 @@ class requireDb{
        
         if(isConnect){
             auto res = db.require(sql);
-            
-            for(auto row : res){
-                
-                auto data = row[1].c_str();   
-                auto sz = row.size(); 
-                int i = 0;                
-                std::vector<vType> tmpData;
-                while (i < sz)
-                {
-                    try
-                    {
-                        auto ds = row[i];
-                        vType vtmp ;
 
-                      if(is_number(ds.c_str())){                          
-                          vtmp.var  = ds.as<double>();
-                        }
-                        else
+            std::cout << res.size() << '\n';
+
+            if( res.size() > 0)
+            {
+                for(auto row : res){
+                    
+                    auto data = row[1].c_str();   
+                    auto sz = row.size(); 
+                    int i = 0;                
+                    std::vector<vType> tmpData;
+                    while (i < sz)
+                    {
+                        try
                         {
-                            vtmp.var  = ds.as<std::string>();
+                            auto ds = row[i];
+                            vType vtmp ;
+
+                        if(is_number(ds.c_str())){                          
+                            vtmp.var  = ds.as<double>();
+                            }
+                            else
+                            {
+                                vtmp.var  = ds.as<std::string>();
+                            }
+
+                            tmpData.push_back(vtmp);
                         }
+                        catch(const std::exception& e)
+                        {
+                            std::cerr << e.what() << '\n';
+                        }
+                        
+                        
+                        ++i;
+                    }
 
-                        tmpData.push_back(vtmp);
-                    }
-                    catch(const std::exception& e)
-                    {
-                        std::cerr << e.what() << '\n';
-                    }
-                    
-                    
-                    ++i;
+                    dataList.push_back(tmpData);
                 }
-
-                dataList.push_back(tmpData);
             }
         }
         else{

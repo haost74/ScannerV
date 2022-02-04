@@ -9,6 +9,20 @@ void requireDb::connectDb(){
     }
 }
 
+void requireDb::require(std::string sql){
+     connectDb();
+     if(isConnect){
+        try
+        {
+            db.transag(sql);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+     }
+}
+
 std::string requireDb::endIp(){
     std::string addr{""};
     
